@@ -1,11 +1,21 @@
-package com.example.electrobitemap.presentation
+package com.example.electrobitemap.presentation.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 
 import androidx.compose.runtime.Composable
@@ -17,30 +27,38 @@ import androidx.compose.ui.unit.dp
 import com.example.electrobitemap.data.model.Elektrobit
 
 @Composable
-fun BottomCardView(elektrobits : List<Elektrobit>) {
-
+fun BottomCardView(elektrobits : List<Elektrobit>, modifier: Modifier = Modifier) {
+  LazyRow(
+      modifier = modifier,
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      contentPadding = PaddingValues(start = 24.dp, top = 8.dp, end = 24.dp, bottom = 24.dp)
+  ) {
+      itemsIndexed(items = elektrobits) { index, item ->
+         ElectroInfoCard(elektrobit = item)
+      }
+  }
 }
 
 @Composable
 fun ElectroInfoCard(elektrobit: Elektrobit) {
     Card(
-        elevation = 4.dp,
+        elevation = 16.dp,
         modifier = Modifier
-            .padding(8.dp)
             .clip(RoundedCornerShape(size = 20.dp))
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
+
         ) {
             Text(
                 text = elektrobit.name,
                 style = MaterialTheme.typography.h6,
-                modifier = Modifier
-                    .padding(8.dp)
+                modifier = Modifier.padding(2.dp)
+
             )
-            Row() {
-                Column(modifier = Modifier.weight(0.8f)) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.wrapContentSize()) {
+                Row(modifier = Modifier.padding(2.dp)) {
+                Column(modifier = Modifier.padding(2.dp)) {
                     Text(
                         text = elektrobit.country,
                         style = MaterialTheme.typography.h6
@@ -56,7 +74,7 @@ fun ElectroInfoCard(elektrobit: Elektrobit) {
                         maxLines = 3
                     )
                 }
-                Column(modifier = Modifier.weight(0.8f)) {
+                Column(modifier = Modifier.padding(2.dp)) {
                     Text(
                         text = elektrobit.tel,
                         style = MaterialTheme.typography.h6
@@ -67,6 +85,7 @@ fun ElectroInfoCard(elektrobit: Elektrobit) {
                         maxLines = 3
                     )
                 }
+            }
             }
         }
     }
@@ -83,5 +102,32 @@ fun showCard(){
         tel = "+49 9131 7701 0",
         fax = "+49 9131 7701 6333"
     )
-    ElectroInfoCard(elektrobit = elektrobit)
+    val electrobits = listOf(
+        Elektrobit(
+            name = "Elektrobit Automotive GmbH",
+            address = "Am Wolfsmantel 46",
+            country = "Germany",
+            city = "Erlangen",
+            tel = "+49 9131 7701 0",
+            fax = "+49 9131 7701 6333"
+        ),
+        Elektrobit(
+            name = "Elektrobit Automotive GmbH",
+            address = "Am Wolfsmantel 46",
+            country = "Germany",
+            city = "Erlangen",
+            tel = "+49 9131 7701 0",
+            fax = "+49 9131 7701 6333"
+        ),
+        Elektrobit(
+            name = "Elektrobit Automotive GmbH",
+            address = "Am Wolfsmantel 46",
+            country = "Germany",
+            city = "Erlangen",
+            tel = "+49 9131 7701 0",
+            fax = "+49 9131 7701 6333"
+        )
+    )
+ // ElectroInfoCard(elektrobit = elektrobit)
+    BottomCardView(electrobits, Modifier.size(400.dp))
 }

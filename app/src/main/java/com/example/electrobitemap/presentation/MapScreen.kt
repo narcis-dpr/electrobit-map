@@ -13,6 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.electrobitemap.data.model.Elektrobit
+import com.example.electrobitemap.presentation.components.BottomCardView
+import com.example.electrobitemap.presentation.components.FilterBar
+import com.example.electrobitemap.presentation.state.CountryFilter
 import com.google.android.gms.maps.GoogleMap
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -21,32 +25,36 @@ import com.google.maps.android.compose.MapUiSettings
 @Composable
 fun MapScreen() {
     val scaffoldState = rememberScaffoldState()
+    val electrobits = listOf(Elektrobit(name = "Elektrobit Automotive GmbH", address = "Am Wolfsmantel 46", country = "Germany", city = "Erlangen", tel = "+49 9131 7701 0", fax = "+49 9131 7701 6333"),
+        Elektrobit(name = "Elektrobit Automotive GmbH", address = "Am Wolfsmantel 46", country = "Germany", city = "Erlangen", tel = "+49 9131 7701 0", fax = "+49 9131 7701 6333", Image = ""))
+    val countires = listOf(CountryFilter("Germany", selected = true), CountryFilter("Germany", selected = true), CountryFilter("Italy", selected = false), CountryFilter("India", selected = false))
     val uiSettings = remember {
-        MapUiSettings(zoomControlsEnabled = true,
-            scrollGesturesEnabledDuringRotateOrZoom = true)
+        MapUiSettings(zoomControlsEnabled = false, scrollGesturesEnabledDuringRotateOrZoom = true)
     }
     Scaffold(
         scaffoldState = scaffoldState,
-        floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ },
             modifier = Modifier) {
                 Icon(imageVector = Icons.Default.ToggleOff, contentDescription = "")
             }
         },
-        bottomBar = {
+        topBar = {
+            FilterBar(items = countires) {
 
-        }) {
+            }
+        },
+        bottomBar = {
+            BottomCardView(elektrobits = electrobits)
+        }
+    ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
            // properties = viewModel.state.properties,
             uiSettings = uiSettings,
-            onMapLongClick = {
-              //  viewModel.onEvent(MapEvent.OnMapLongClick(it))
-            }
-        ) {
-            FloatingActionButton(onClick = { /*TODO*/ },) {
+
+        )  {
+           // FloatingActionButton(onClick = { /*TODO*/ },) {
             }
         }
-    }
 }

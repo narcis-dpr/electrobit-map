@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,28 +37,32 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.Dimension
+import com.example.electrobitemap.presentation.state.CountryFilter
 import com.example.electrobitemap.ui.theme.diagonalGradientBorder
 import com.google.android.gms.common.SignInButton.ColorScheme
 
 @Composable
-fun FilterBar(items: List<String>, onShowFilters: () -> Unit) {
+fun FilterBar(items: List<CountryFilter>, onShowFilters: () -> Unit) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(start = 12.dp, end = 8.dp),
-        modifier = Modifier.heightIn(min = 56.dp)
+        modifier = Modifier.heightIn(min = 56.dp).background(color = Color.Transparent)
     ) {
-        item {
-            IconButton(onClick = { onShowFilters }) {
-                Icon(imageVector = Icons.Rounded.FilterList,
-                    contentDescription = "item for filter list",
-                    tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.diagonalGradientBorder(
-                        colors = listOf(MaterialTheme.colorScheme.onSecondaryContainer),
-                        shape = CircleShape
-                    )
-                )
-            }
+//        item {
+//            IconButton(onClick = { onShowFilters }) {
+//                Icon(imageVector = Icons.Rounded.FilterList,
+//                    contentDescription = "item for filter list",
+//                    tint = MaterialTheme.colorScheme.onSecondary,
+//                    modifier = Modifier.diagonalGradientBorder(
+//                        colors = listOf(MaterialTheme.colorScheme.onSecondaryContainer, MaterialTheme.colorScheme.onSecondary),
+//                        shape = CircleShape
+//                    )
+//                )
+//            }
+//        }
+        items(items) { item ->
+            FilterChip(title = item.title, selected = item.selected)
         }
     }
 }
@@ -65,8 +70,7 @@ fun FilterBar(items: List<String>, onShowFilters: () -> Unit) {
 @Composable
 fun FilterChip(
     title: String,
-    selected: Boolean,
-    setSelected: Boolean
+    selected: Boolean
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
@@ -98,7 +102,7 @@ fun FilterChip(
         modifier = Modifier
             .toggleable(
                 value = selected,
-                onValueChange = { setSelected },
+                onValueChange = { selected },
             )
             .clip(RoundedCornerShape(25))
             .wrapContentWidth()
@@ -123,5 +127,5 @@ fun FilterChip(
 @Preview
 @Composable
 fun showCountires() {
-    FilterChip(title = "Germany", selected = true, setSelected = false)
+    FilterChip(title = "Germany", selected = false)
 }

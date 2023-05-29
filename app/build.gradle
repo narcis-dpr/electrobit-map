@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -50,6 +50,9 @@ android {
 
 dependencies {
 
+    def retrofit_version = '2.9.0'
+    def mockFit_version = "1.1.0"
+
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.5.1'
@@ -67,9 +70,6 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    //test
-//    implementation "com.github.javaherisaber.MockFit:runtime:1.1.0"
-//    kapt "com.github.javaherisaber.MockFit:compiler:1.1.0"
     // dependency injection
     implementation "com.google.dagger:hilt-android:2.44.2"
     kapt "com.google.dagger:hilt-android-compiler:2.44"
@@ -90,4 +90,18 @@ dependencies {
     implementation "com.google.maps.android:maps-compose:1.0.0"
     // Google Maps
     implementation "com.google.android.gms:play-services-maps:18.0.2"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+//    implementation "com.squareup.retrofit2:converter-jackson:2.9.0"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //test
+    implementation "com.github.javaherisaber.MockFit:runtime:1.1.0"
+    kapt "com.github.javaherisaber.MockFit:compiler:1.1.0"
+    // Room
+    implementation "androidx.room:room-runtime:2.4.1"
+    kapt "androidx.room:room-compiler:2.4.1"
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.4.1"
+
 }
