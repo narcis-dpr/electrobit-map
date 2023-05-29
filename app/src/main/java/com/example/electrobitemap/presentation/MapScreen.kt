@@ -26,7 +26,7 @@ import com.google.maps.android.compose.MapUiSettings
 fun MapScreen() {
     val scaffoldState = rememberScaffoldState()
     val electrobits = listOf(Elektrobit(name = "Elektrobit Automotive GmbH", address = "Am Wolfsmantel 46", country = "Germany", city = "Erlangen", tel = "+49 9131 7701 0", fax = "+49 9131 7701 6333"),
-        Elektrobit(name = "Elektrobit Automotive GmbH", address = "Am Wolfsmantel 46", country = "Germany", city = "Erlangen", tel = "+49 9131 7701 0", fax = "+49 9131 7701 6333", Image = ""))
+        Elektrobit(name = "Elektrobit Automotive GmbH", address = "Am Wolfsmantel 46", country = "Germany", city = "Erlangen", tel = "+49 9131 7701 0", fax = "+49 9131 7701 6333", image = ""))
     val countires = listOf(CountryFilter("Germany", selected = true), CountryFilter("Germany", selected = true), CountryFilter("Italy", selected = false), CountryFilter("India", selected = false))
     val uiSettings = remember {
         MapUiSettings(zoomControlsEnabled = false, scrollGesturesEnabledDuringRotateOrZoom = true)

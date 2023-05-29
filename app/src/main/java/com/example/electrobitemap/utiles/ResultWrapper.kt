@@ -1,4 +1,4 @@
-package com.example.utiles
+package com.example.electrobitemap.utiles
 
 sealed class ResultWrapper <out R> {
     data class Success<out T> (val data : T) : ResultWrapper<T>()
