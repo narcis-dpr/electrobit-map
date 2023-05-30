@@ -25,15 +25,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.electrobitemap.data.model.Elektrobit
+import com.example.electrobitemap.presentation.state.ElektrobitState
 
 @Composable
-fun BottomCardView(elektrobits : List<Elektrobit>, modifier: Modifier = Modifier) {
+fun BottomCardView(elektrobits : ElektrobitState, modifier: Modifier = Modifier) {
   LazyRow(
       modifier = modifier,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       contentPadding = PaddingValues(start = 24.dp, top = 8.dp, end = 24.dp, bottom = 24.dp)
   ) {
-      itemsIndexed(items = elektrobits) { index, item ->
+      itemsIndexed(items = elektrobits.locations) { index, item ->
          ElectroInfoCard(elektrobit = item)
       }
   }
@@ -129,5 +130,5 @@ fun showCard(){
         )
     )
  // ElectroInfoCard(elektrobit = elektrobit)
-    BottomCardView(electrobits, Modifier.size(400.dp))
+ //   BottomCardView(electrobits, Modifier.size(400.dp))
 }

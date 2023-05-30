@@ -1,6 +1,7 @@
 package com.example.electrobitemap.presentation.components
 
 import android.content.res.Resources.Theme
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -36,18 +36,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.Dimension
-import com.example.electrobitemap.presentation.state.CountryFilter
-import com.example.electrobitemap.ui.theme.diagonalGradientBorder
-import com.google.android.gms.common.SignInButton.ColorScheme
+
 
 @Composable
-fun FilterBar(items: List<CountryFilter>, onShowFilters: () -> Unit) {
+fun FilterBar(items: List<String>, onShowFilters: () -> Unit) {
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(start = 12.dp, end = 8.dp),
-        modifier = Modifier.heightIn(min = 56.dp).background(color = Color.Transparent)
+        modifier = Modifier
+            .heightIn(min = 56.dp)
+            .background(color = Color.Transparent)
     ) {
 //        item {
 //            IconButton(onClick = { onShowFilters }) {
@@ -62,29 +61,27 @@ fun FilterBar(items: List<CountryFilter>, onShowFilters: () -> Unit) {
 //            }
 //        }
         items(items) { item ->
-            FilterChip(title = item.title, selected = item.selected)
+            FilterChip(title = item)
         }
     }
 }
 
 @Composable
 fun FilterChip(
-    title: String,
-    selected: Boolean
+    title: String
 ) {
+    var selectValue = false
+    var setSelectValue = false
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
-    val backgroundPressed =
-        if (selected) {
-            Modifier.background(
-                color = Color.Green
-            )
+    val backgroundPressed by animateColorAsState(
+        if (pressed) {
+            Color.Green
         } else {
-            Modifier.background(
-                color = Color.Gray
-            )
+            Color.LightGray
         }
-    val border = if (selected) {
+    )
+    val border = if (pressed) {
         Modifier.border(
             width = 2.dp,
             brush = Brush.linearGradient(listOf(Color.Yellow, Color.Green, Color.LightGray)),
@@ -93,7 +90,7 @@ fun FilterChip(
     } else {
         Modifier.border(
             width = 10.dp,
-            brush = Brush.linearGradient(listOf(Color.White, Color.Gray, Color.LightGray)),
+            brush = Brush.linearGradient(listOf(Color.Transparent, Color.White, Color.LightGray)),
             shape = RoundedCornerShape(25)
         )
     }
@@ -101,13 +98,24 @@ fun FilterChip(
     Box(
         modifier = Modifier
             .toggleable(
-                value = selected,
-                onValueChange = { selected },
+                interactionSource = interactionSource,
+                value = selectValue,
+                indication = null,
+                onValueChange = { !selectValue }
             )
+//            .toggleable(
+//                value = selectValue,
+//                onValueChange = {
+//                    println(" the first value is $selectValue ")
+//                    selectValue = !selectValue
+//                    println(" the second value is $selectValue")
+//                },
+//                interactionSource = interactionSource
+//            )
             .clip(RoundedCornerShape(25))
             .wrapContentWidth()
             .height(40.dp)
-            .then(backgroundPressed)
+            .then(Modifier.background(color = backgroundPressed))
             .then(border)
     ) {
         Text(
@@ -127,5 +135,5 @@ fun FilterChip(
 @Preview
 @Composable
 fun showCountires() {
-    FilterChip(title = "Germany", selected = false)
+    FilterChip(title = "Germany")
 }

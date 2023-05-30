@@ -6,4 +6,5 @@ interface GetElektrobitLocationRepository {
     suspend fun getLocationByCountry(country: String) : List<Elektrobit>
     suspend fun saveElektrobitLocation(elektrobit: Elektrobit)
     suspend fun getLocationsByCountry(countries: List<String>): List<Elektrobit>?
+    suspend fun getCountries(): List<String>
 }

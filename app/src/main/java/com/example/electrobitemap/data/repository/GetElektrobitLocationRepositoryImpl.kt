@@ -13,16 +13,17 @@ class GetElektrobitLocationRepositoryImpl @Inject constructor(
     private val getDataDao: GetDataDao
 ) : GetElektrobitLocationRepository {
     override suspend fun getLocationByCountry(country: String): List<Elektrobit> {
-        return if (!getDataDao.getElectrobitLocationByCountry(country).isEmpty()) {
-            return getDataDao.getElectrobitLocationByCountry(country)
-                .map { it -> it.mapToElektrobit() }
+         if (getDataDao.getElectrobitLocationByCountry(country).isNotEmpty()) {
+             return getDataDao.getElectrobitLocationByCountry(country)
+                .map { it ->
+                    it.mapToElektrobit() }
         } else {
             elektrobitApi.getElectroLocations().map { it -> it.mapToElektrobit().mamToEntity() }
                 .forEach {
                     getDataDao.insertElectrobitLocation(it)
                 }
 
-            return getDataDao.getElectrobitLocationByCountry(country)
+             return getDataDao.getElectrobitLocationByCountry(country)
                 .map { it -> it.mapToElektrobit() }
         }
     }
@@ -38,5 +39,9 @@ class GetElektrobitLocationRepositoryImpl @Inject constructor(
                 getDataDao.getElectrobitLocationByCountry(country).map { it.mapToElektrobit() })
         }
         return result.flatten()
+    }
+
+    override suspend fun getCountries(): List<String> {
+        return getDataDao.getAllCountries()
     }
 }

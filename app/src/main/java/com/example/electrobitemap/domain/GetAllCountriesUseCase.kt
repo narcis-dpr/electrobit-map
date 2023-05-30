@@ -11,18 +11,17 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class GetLocationsByCountryUseCase @Inject constructor(
+class GetAllCountriesUseCase@Inject constructor(
     private val getElektrobitLocationRepository: GetElektrobitLocationRepository,
     @IoDispatcher ioDispatcher: CoroutineDispatcher
-) : UseCaseHelper<List<String>, List<Elektrobit>?>(ioDispatcher) {
-    override fun execute(parameter: List<String>): Flow<ResultWrapper<List<Elektrobit>?>> = flow {
+) : UseCaseHelper<Unit, List<String>>(ioDispatcher) {
+    override fun execute(parameter: Unit): Flow<ResultWrapper<List<String>>> = flow {
         try {
             emit(ResultWrapper.Loading)
-            val locations = getElektrobitLocationRepository.getLocationsByCountry(parameter)
-            emit(ResultWrapper.Success(locations))
+            val countries = getElektrobitLocationRepository.getCountries()
+            emit(ResultWrapper.Success(countries))
         } catch (e: HttpException) {
             emit(ResultWrapper.Error(e))
         }
-
     }
 }

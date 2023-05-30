@@ -8,6 +8,6 @@ import retrofit2.http.GET
 
 interface ElektrobitApi {
     @Mock("data.json")
-    @GET("list")
+    @GET("elektrobit")
     suspend fun getElectroLocations() : List<ElektrobitResponse>
 }

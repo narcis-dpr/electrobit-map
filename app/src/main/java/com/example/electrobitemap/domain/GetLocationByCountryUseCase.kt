@@ -8,13 +8,21 @@ import com.example.electrobitemap.utiles.UseCaseHelper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class GetLocationByCountryUseCase @Inject constructor(
     private val getElektrobitLocationRepository: GetElektrobitLocationRepository,
     @IoDispatcher ioDispatcher: CoroutineDispatcher
-): UseCaseHelper<String, List<Elektrobit>>(ioDispatcher) {
+) : UseCaseHelper<String, List<Elektrobit>>(ioDispatcher) {
     override fun execute(parameter: String): Flow<ResultWrapper<List<Elektrobit>>> = flow {
-        getElektrobitLocationRepository.getLocationByCountry(parameter)
+        try {
+            emit(ResultWrapper.Loading)
+            val locations = getElektrobitLocationRepository.getLocationByCountry(parameter)
+            emit(ResultWrapper.Success(locations))
+        } catch (e: HttpException) {
+            emit(ResultWrapper.Error(e))
+        }
+
     }
 }

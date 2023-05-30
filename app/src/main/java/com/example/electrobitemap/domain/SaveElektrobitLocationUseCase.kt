@@ -8,6 +8,7 @@ import com.example.electrobitemap.utiles.UseCaseHelper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class SaveElektrobitLocationUseCase @Inject constructor(
@@ -15,6 +16,12 @@ class SaveElektrobitLocationUseCase @Inject constructor(
     @IoDispatcher ioDispatcher: CoroutineDispatcher
 ) : UseCaseHelper<Elektrobit, Unit>(ioDispatcher) {
     override fun execute(parameter: Elektrobit): Flow<ResultWrapper<Unit>> = flow {
-        getElektrobitLocationRepository.saveElektrobitLocation(parameter)
+        try {
+            emit(ResultWrapper.Loading)
+            emit(ResultWrapper.Success(getElektrobitLocationRepository.saveElektrobitLocation(parameter)))
+        } catch (e: HttpException) {
+            emit(ResultWrapper.Error(e))
+        }
+
     }
 }
