@@ -18,7 +18,7 @@ interface GetDataDao {
     @Query("SELECT * FROM electrobitAroundTheWorld WHERE country = :country")
     fun getElectrobitLocationByCountry(country: String): List<ElectrobitLocationsEntity>
 
-    @Query("SELECT country FROM electrobitAroundTheWorld")
+    @Query("SELECT DISTINCT country FROM electrobitAroundTheWorld")
     fun getAllCountries(): List<String>
 
 

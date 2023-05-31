@@ -102,10 +102,19 @@ dependencies {
     //test
     implementation "com.github.javaherisaber.MockFit:runtime:1.1.0"
     kapt "com.github.javaherisaber.MockFit:compiler:1.1.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    implementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "io.mockk:mockk:1.10.6"
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation("app.cash.turbine:turbine-jvm:0.5.2")
+    testImplementation("org.mockito:mockito-inline:2.8.47")
     // Room
     implementation "androidx.room:room-runtime:2.4.1"
     kapt "androidx.room:room-compiler:2.4.1"
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.4.1"
+
+    // load image
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
 }

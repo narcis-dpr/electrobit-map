@@ -11,12 +11,16 @@ import com.example.electrobitemap.domain.GetLocationByCountryUseCase
 import com.example.electrobitemap.domain.GetLocationsByCountryUseCase
 import com.example.electrobitemap.domain.SaveElektrobitLocationUseCase
 import com.example.electrobitemap.presentation.event.FilterEvent
-import com.example.electrobitemap.presentation.state.CountryFilter
+import com.example.electrobitemap.presentation.state.CountriesState
 import com.example.electrobitemap.presentation.state.ElektrobitState
+import com.example.electrobitemap.presentation.state.MapState
+import com.example.electrobitemap.utiles.MapStyle
 import com.example.electrobitemap.utiles.ResultWrapper
+import com.google.android.gms.maps.model.MapStyleOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,13 +31,17 @@ class ElectrobitLocationViewModel @Inject constructor(
     private val getAllCountriesUseCase: GetAllCountriesUseCase
 ) : ViewModel() {
     init {
-        getElectrobitLocationByCountryName("Germany")
+        getAllCountries()
     }
-    var filterState by mutableStateOf(CountryFilter())
+
+    var state by mutableStateOf(MapState())
     private val _elektrobitLocations = mutableStateOf(ElektrobitState())
     val elektrobitLocations: State<ElektrobitState> = _elektrobitLocations
 
-    private fun getElectrobitLocationByCountryName(country: String) {
+    private val _elektrobitCountries = mutableStateOf(CountriesState())
+    val elektrobitCountries: State<CountriesState> = _elektrobitCountries
+
+    fun getElectrobitLocationByCountryName(country: String) {
         getLocationByCountryUseCase(country).onEach { result ->
             when (result) {
                 is ResultWrapper.Error -> {
@@ -51,20 +59,42 @@ class ElectrobitLocationViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-    private fun getAllCountries() {
-        getAllCountriesUseCase(Unit).onEach { result ->
-            when(result) {
-                is ResultWrapper.Error -> {
 
+    fun getAllCountries() {
+        getAllCountriesUseCase(Unit).onEach { result ->
+            when (result) {
+                is ResultWrapper.Error -> {
+                    _elektrobitCountries.value =
+                        CountriesState(error = result.exception.toString() ?: "Unknown Error")
                 }
-                ResultWrapper.Loading -> TODO()
-                is ResultWrapper.Success -> TODO()
+
+                ResultWrapper.Loading -> {
+                    _elektrobitCountries.value = CountriesState(isLoading = true)
+                }
+
+                is ResultWrapper.Success -> {
+                    _elektrobitCountries.value =
+                        CountriesState(countries = result.data.map { Pair(it, false) })
+                }
             }
-        }
+        }.launchIn(viewModelScope)
     }
+
     fun onFilterEvent(filterEvent: FilterEvent) {
-        when (filterEvent) {
-            is FilterEvent.OnFilterClick -> TODO()
-        }
+       when(filterEvent) {
+           is FilterEvent.OnFilterClick -> {
+               getElectrobitLocationByCountryName(filterEvent.countryFilter.first)
+           }
+           FilterEvent.ToggleFalloutMap -> {
+               state = state.copy(
+                   properties = state.properties.copy(
+                       mapStyleOptions = if(state.isFalloutMap) {
+                           null
+                       } else MapStyleOptions(MapStyle.json),
+                   ),
+                   isFalloutMap = !state.isFalloutMap
+               )
+           }
+       }
     }
 }
